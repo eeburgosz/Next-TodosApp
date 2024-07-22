@@ -1,3 +1,4 @@
+import { getUserSessionServer } from "@/auth/actions/auth-actions";
 import prisma from "@/lib/prisma";
 import * as yup from "yup";
 
@@ -28,13 +29,16 @@ const postSchema = yup.object({
 });
 
 export async function POST(request: Request) {
+	const user = await getUserSessionServer();
+	if (!user) return Response.json("No autorizado", { status: 401 });
+
 	try {
 		// const body = await postSchema.validate(await request.json());
 		const { complete, description } = await postSchema.validate(
 			await request.json()
 		);
 		const todo = await prisma.todo.create({
-			data: { complete, description },
+			data: { complete, description, userId: user.id },
 		});
 		return Response.json(todo);
 	} catch (error) {
@@ -43,10 +47,13 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(req: Request) {
+	const user = await getUserSessionServer();
+	if (!user) return Response.json("No autorizado", { status: 401 });
 	try {
 		await prisma.todo.deleteMany({
 			where: {
 				complete: true,
+				userId: user.id,
 			},
 		});
 		return Response.json({ message: "Todos completados han sido eliminados" });

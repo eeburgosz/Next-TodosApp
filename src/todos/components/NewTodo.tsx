@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { IoTrashOutline } from "react-icons/io5";
-// import * as todosApi from "@/todos/helpers/todos";
+import * as todosApi from "@/todos/helpers/todos";
 import { addTodo, deleteCompleted } from "../actions/todo-actions";
 
 export const NewTodo = () => {
@@ -16,7 +16,8 @@ export const NewTodo = () => {
 		if (description.trim().length === 0) return;
 
 		// await todosApi.createTodo(description);
-		await addTodo(description);
+		// await addTodo(description);
+		await todosApi.createTodo(description);
 		setDescription("");
 		router.refresh();
 	};

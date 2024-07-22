@@ -16,6 +16,11 @@ docker compose up -d
 7. Ejecutar comando `npx prisma generate`
 8. Ejecutar el SEED [crea la DB local](http://localhost:3000/api/seed)
 
+## Nota: Usuario por defecto
+
+**usuaio:** test1@google.com
+**password:** 123456
+
 # Prisma Commands
 
 ```

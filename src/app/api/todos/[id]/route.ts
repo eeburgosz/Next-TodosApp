@@ -1,3 +1,4 @@
+import { getUserSessionServer } from "@/auth/actions/auth-actions";
 import prisma from "@/lib/prisma";
 import * as yup from "yup";
 
@@ -8,10 +9,13 @@ interface Args {
 }
 
 export async function GET(request: Request, { params }: Args) {
+	const user = await getUserSessionServer();
+	if (!user) return Response.json("No autorizado", { status: 401 });
 	const { id } = params;
 	const todo = await prisma.todo.findFirst({
 		where: {
 			id,
+			userId: user.id,
 		},
 	});
 	if (!todo) {
@@ -25,10 +29,13 @@ const putSchema = yup.object({
 	description: yup.string().optional(),
 });
 export async function PUT(request: Request, { params }: Args) {
+	const user = await getUserSessionServer();
+	if (!user) return Response.json("No autorizado", { status: 401 });
 	const { id } = params;
 	const todo = await prisma.todo.findFirst({
 		where: {
 			id,
+			userId: user.id,
 		},
 	});
 	try {
